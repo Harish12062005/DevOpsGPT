@@ -225,6 +225,41 @@ jobs:
         </div>
       </div>
 
+      {/* Troubleshooting Section for Push Declined & Blank Page Errors */}
+      <div className="bg-amber-950/20 border-2 border-amber-500/40 rounded-2xl p-5 space-y-3">
+        <div className="flex items-center gap-2.5 text-amber-300 font-bold text-sm">
+          <ShieldCheck className="h-5 w-5 text-amber-400" />
+          <span>Troubleshooting: Fixing Common GitHub & Webpage Errors</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+            <span className="font-semibold text-rose-400 flex items-center gap-1.5">
+              <span>Why is the Webpage Blank on GitHub Pages?</span>
+            </span>
+            <p className="text-slate-400 text-[11px] leading-relaxed">
+              GitHub Pages defaults to serving raw root files. Browsers cannot read unbuilt React TypeScript (`.tsx`). Also, GitHub Pages lives under <code className="text-amber-300">/DevOpsGPT/</code>, so relative base paths are required!
+            </p>
+            <div className="bg-slate-900 p-2 rounded text-[11px] text-slate-300 space-y-1 font-sans">
+              <div><strong>Fix 1:</strong> In GitHub repo $\to$ <strong>Settings</strong> $\to$ <strong>Pages</strong> $\to$ set Source to <strong>"GitHub Actions"</strong>!</div>
+              <div><strong>Fix 2:</strong> Or deploy in 30s on <a href="https://vercel.com/new" target="_blank" className="text-cyan-400 underline font-semibold">Vercel</a> (Zero config required).</div>
+            </div>
+          </div>
+
+          <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+            <span className="font-semibold text-cyan-400">Push Declined by Repository Rules</span>
+            <p className="text-slate-400 text-[11px] leading-relaxed">
+              If GitHub blocked your commit due to secret scanning (API keys in .env):
+            </p>
+            <div className="bg-slate-900 p-2 rounded font-mono text-[10px] text-cyan-300">
+              git rm --cached .env<br />
+              git commit --amend -m "chore: remove secrets"<br />
+              git push origin main --force
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Part 3: Automated CI/CD with GitHub Actions */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
         <div className="flex items-center justify-between">
