@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import net from 'net';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
@@ -10,7 +11,30 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3001;
+const PORT = Number(process.env.PORT) || 3000;
+
+function findAvailablePort(startPort: number): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+
+    server.unref();
+
+    server.on('error', (err: NodeJS.ErrnoException) => {
+      if (err.code === 'EADDRINUSE') {
+        resolve(findAvailablePort(startPort + 1));
+        return;
+      }
+
+      reject(err);
+    });
+
+    server.listen(startPort, '0.0.0.0', () => {
+      const address = server.address();
+      const resolvedPort = typeof address === 'object' && address ? address.port : startPort;
+      server.close(() => resolve(resolvedPort));
+    });
+  });
+}
 
 app.use(express.json());
 
@@ -393,6 +417,8 @@ function generateSimulatedAgentResponse(prompt: string, runbook: any) {
 
 // Development vs Production serving
 async function startServer() {
+  const resolvedPort = await findAvailablePort(PORT);
+
   if (process.env.NODE_ENV !== 'production') {
     // In dev mode: mount Vite middleware on Express
     const { createServer: createViteServer } = await import('vite');
@@ -410,8 +436,8 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`DevOps Agentic AI Assistant running at http://0.0.0.0:${PORT}`);
+  app.listen(resolvedPort, '0.0.0.0', () => {
+    console.log(`DevOps Agentic AI Assistant running at http://0.0.0.0:${resolvedPort}`);
     console.log(`Gemini integration: ${aiClient ? 'Active (gemini-3.8-flash)' : 'Simulation Mode'}`);
   });
 }
