@@ -1,0 +1,6 @@
+{
+  "name": "DevOpsGPT - Agentic AI Intelligent DevOps Assistant",
+  "description": "An Agentic AI-based intelligent DevOps assistant combining reasoning, tools (K8s, Docker, Git, Terraform, Prometheus), runbooks, and human-in-the-loop safety for incident response and IaC generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
